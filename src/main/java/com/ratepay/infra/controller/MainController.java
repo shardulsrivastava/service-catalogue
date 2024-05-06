@@ -27,4 +27,9 @@ public class MainController {
     public String v2() {
         return "You are at the version v2";
     }
+
+    @GetMapping("/api/health-check")
+    public String healthcheck() {
+        return "I am Healthy!!";
+    }
 }
