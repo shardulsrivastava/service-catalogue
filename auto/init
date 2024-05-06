@@ -12,6 +12,9 @@ curl -Lo copilot https://github.com/aws/copilot-cli/releases/latest/download/cop
     && sudo mv copilot /usr/local/bin/copilot \
     && copilot version
 
+echo "Generating JAR file"
+mvn clean package
+
 # echo "Installing AWS CLI"
 # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
 #     && unzip awscliv2.zip \

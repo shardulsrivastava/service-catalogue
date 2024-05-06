@@ -4,5 +4,17 @@ set -euo pipefail
 
 cd "$(dirname $0)/.."
 
+export AWS_REGION="us-east-1"
+
 echo "Generating JAR file"
 mvn clean package
+
+echo "Deploying CoPilot App"
+copilot init --app service-catalogue --name api --type "Load Balanced Web Service" --dockerfile "./Dockerfile" --deploy
+
+echo "Creating SSM Configuration"
+aws ssm put-parameter \
+    --name "ecs-cwagent" \
+    --type "String" \
+    --value "`cat /workspaces/service-catalogue/src/main/resources/ecs-cwagent.json`" \
+    --region "$AWS_REGION"
