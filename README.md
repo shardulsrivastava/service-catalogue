@@ -9,15 +9,15 @@ This repo has codespace setup and upon initialization, all the right dependencie
 ## Deploy with CoPilot
 
 ```
-copilot init --app service-catalogue --name api --type "Load Balanced Web Service" --dockerfile "./Dockerfile" --deploy
+./auto/deploy
 ```
 
 
-## Override Defaults
+## Override IAM Task and Execution Role
 
 Override IAM role with the IAM policies required for [Cloudwatch signal](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Signals-Enable-ECS.html) [here](service-catalogue/copilot/api/overrides/cfn.patches.yml).
 
-validate these patches:
+Validate these patches:
 
 ```bash
 copilot svc package --diff
@@ -28,4 +28,9 @@ Execute the patch:
 ```bash
 copilot svc deploy
 ```
+
+## Override ECS Task Definition
+
+
+
 

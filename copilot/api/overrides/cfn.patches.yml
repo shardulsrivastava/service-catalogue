@@ -27,7 +27,60 @@
   - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
   - "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
 
+- op: add
+  path: /Resources/TaskDefinition/Properties/Volumes
+  value:
+    Name: opentelemetry-auto-instrumentation
 
-# - op: add
-#   path: /Resources/TaskRole/Properties/ManagedPolicyArns/1
-#   value: 
+- op: add
+  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/DependsOn
+  value:
+    Condition: init
+    ContainerName: COMPLETE
+
+- op: add
+  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/Environment/-
+  value:
+    - Name: OTEL_RESOURCE_ATTRIBUTES
+      Value: aws.hostedin.environment=dev,service.name=service-catalogue
+    - Name: OTEL_AWS_APP_SIGNALS_ENABLED
+      value: 'true'
+    - Name: OTEL_METRICS_EXPORTER
+      Value: none
+    - Name: JAVA_TOOL_OPTIONS
+      Value: " -javaagent:/otel-auto-instrumentation/javaagent.jar"
+    - Name: OTEL_AWS_APP_SIGNALS_EXPORTER_ENDPOINT
+      Value: http://127.0.0.1:4315
+    - Name: OTEL_TRACES_SAMPLER
+      Value: xray
+    - Name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+      Value: http://127.0.0.1:4315
+    - Name: OTEL_PROPAGATORS
+      Value: tracecontext,baggage,b3,xray
+
+- op: add
+  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/1
+  value:
+    Name: init
+    Image: public.ecr.aws/aws-observability/adot-autoinstrumentation-java:v1.32.1
+    Essential: false
+    Command:
+      - cp
+      - "/javaagent.jar"
+      - "/otel-auto-instrumentation/javaagent.jar"
+    MountPoints:
+      - SourceVolume: opentelemetry-auto-instrumentation
+        ContainerPath: "/otel-auto-instrumentation"
+        ReadOnly: false
+
+- op: add
+  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/2
+  value:
+    Name: ecs-cwagent
+    Image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+    Essential: true
+    Secrets:
+      - Name: CW_CONFIG_CONTENT
+        ValueFrom: ecs-cwagent
+    
+
