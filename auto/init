@@ -7,9 +7,9 @@ cd "$(dirname $0)/.."
 echo "Installing Dpendencies"
 
 echo "Installing CoPilot CLI"
-curl -Lo copilot https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux \
-    && chmod +x copilot \
-    && sudo mv copilot /usr/local/bin/copilot \
+curl -Lo copilot-binary https://github.com/aws/copilot-cli/releases/latest/download/copilot-linux \
+    && chmod +x copilot-binary \
+    && sudo mv copilot-binary /usr/local/bin/copilot \
     && copilot version
 
 echo "Generating JAR file"

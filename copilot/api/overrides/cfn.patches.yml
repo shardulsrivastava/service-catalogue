@@ -1,0 +1,33 @@
+# Delete the task role resource
+# - op: remove
+#   path: /Resources/TaskRole
+
+# Add a service connect alias
+# - op: add
+#   path: /Resources/Service/Properties/ServiceConnectConfiguration/Services/0/ClientAliases/-
+#   value:
+#     Port: !Ref TargetPort
+#     DnsName: yamlpatchiscool
+
+# Replace the task role in the task definition
+# - op: replace
+#   path: /Resources/TaskDefinition/Properties/TaskRoleArn
+#   value: arn:aws:iam::123456789012:role/MyTaskRole
+
+- op: add
+  path: /Resources/TaskRole/Properties/ManagedPolicyArns
+  value:
+  - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  - "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+
+- op: add
+  path: /Resources/ExecutionRole/Properties/ManagedPolicyArns
+  value:
+  - "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  - "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  - "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+
+
+# - op: add
+#   path: /Resources/TaskRole/Properties/ManagedPolicyArns/1
+#   value: 
