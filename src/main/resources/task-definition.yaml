@@ -1,0 +1,96 @@
+---
+family: service-catalogue-dev-api
+containerDefinitions:
+- name: api
+  image: 851725318848.dkr.ecr.us-east-1.amazonaws.com/service-catalogue/api@sha256:9ca2774fb5b708f35c16b763aa0a37bbb65fe6a9ee175919b47d433e4f3c94e4
+  cpu: 0
+  portMappings:
+  - name: target
+    containerPort: 8080
+    hostPort: 8080
+    protocol: tcp
+  essential: true
+  dependsOn:
+  - containerName: init
+    condition: COMPLETE
+  environment:
+  - name: COPILOT_LB_DNS
+    value: servic-Publi-G8qXBAFohQ7Y-1325312560.us-east-1.elb.amazonaws.com
+  - name: COPILOT_SERVICE_DISCOVERY_ENDPOINT
+    value: dev.service-catalogue.local
+  - name: COPILOT_APPLICATION_NAME
+    value: service-catalogue
+  - name: COPILOT_SERVICE_NAME
+    value: api
+  - name: COPILOT_ENVIRONMENT_NAME
+    value: dev
+  - name: OTEL_RESOURCE_ATTRIBUTES
+    value: aws.hostedin.environment=dev,service.name=service-catalogue
+  - name: OTEL_AWS_APP_SIGNALS_ENABLED
+    value: 'true'
+  - name: OTEL_METRICS_EXPORTER
+    value: none
+  - name: JAVA_TOOL_OPTIONS
+    value: " -javaagent:/otel-auto-instrumentation/javaagent.jar"
+  - name: OTEL_AWS_APP_SIGNALS_EXPORTER_ENDPOINT
+    value: http://127.0.0.1:4315
+  - name: OTEL_TRACES_SAMPLER
+    value: xray
+  - name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+    value: http://127.0.0.1:4315
+  - name: OTEL_PROPAGATORS
+    value: tracecontext,baggage,b3,xray
+  mountPoints:
+  - sourceVolume: opentelemetry-auto-instrumentation
+    containerPath: "/otel-auto-instrumentation"
+    readOnly: false
+  volumesFrom: []
+  dockerLabels: {}
+  logConfiguration:
+    logDriver: awslogs
+    options:
+      awslogs-group: "/copilot/service-catalogue-dev-api"
+      awslogs-region: us-east-1
+      awslogs-stream-prefix: copilot
+  systemControls: []
+- name: ecs-cwagent
+  image: public.ecr.aws/cloudwatch-agent/cloudwatch-agent:latest
+  essential: true
+  secrets:
+  - name: CW_CONFIG_CONTENT
+    valueFrom: ecs-cwagent
+  logConfiguration:
+    logDriver: awslogs
+    options:
+      awslogs-create-group: 'true'
+      awslogs-group: "/ecs/ecs-cwagent"
+      awslogs-region: us-east-1
+      awslogs-stream-prefix: ecs
+- name: init
+  image: public.ecr.aws/aws-observability/adot-autoinstrumentation-java:v1.32.1
+  essential: false
+  command:
+  - cp
+  - "/javaagent.jar"
+  - "/otel-auto-instrumentation/javaagent.jar"
+  mountPoints:
+  - sourceVolume: opentelemetry-auto-instrumentation
+    containerPath: "/otel-auto-instrumentation"
+    readOnly: false
+taskRoleArn: arn:aws:iam::851725318848:role/service-catalogue-dev-api-TaskRole-GyyJ9GbYsmoY
+executionRoleArn: arn:aws:iam::851725318848:role/service-catalogue-dev-api-ExecutionRole-UDJSvx4DqK3F
+networkMode: awsvpc
+volumes:
+- name: opentelemetry-auto-instrumentation
+  host: {}
+requiresCompatibilities:
+- FARGATE
+cpu: '256'
+memory: '512'
+tags:
+- key: copilot-application
+  value: service-catalogue
+- key: copilot-environment
+  value: dev
+- key: copilot-service
+  value: api
