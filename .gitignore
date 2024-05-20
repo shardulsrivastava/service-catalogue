@@ -32,3 +32,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Don't checkin CoPilot Workspace file
+copilot/.workspace
