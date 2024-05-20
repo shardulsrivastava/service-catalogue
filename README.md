@@ -17,6 +17,8 @@ This repo has codespace setup and upon initialization, all the right dependencie
 
 Override IAM role with the IAM policies required for [Cloudwatch signal](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Application-Signals-Enable-ECS.html) [here](service-catalogue/copilot/api/overrides/cfn.patches.yml).
 
+ECS Task Definition [reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinition.html)
+
 Validate these patches:
 
 ```bash
