@@ -30,16 +30,16 @@
 - op: add
   path: /Resources/TaskDefinition/Properties/Volumes
   value:
-    Name: opentelemetry-auto-instrumentation
+    - Name: opentelemetry-auto-instrumentation
 
 - op: add
   path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/DependsOn
   value:
-    Condition: init
-    ContainerName: COMPLETE
+    - Condition: COMPLETE
+      ContainerName: init
 
 - op: add
-  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/Environment/-
+  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/Environment
   value:
     - Name: OTEL_RESOURCE_ATTRIBUTES
       Value: aws.hostedin.environment=dev,service.name=service-catalogue
@@ -71,7 +71,6 @@
     MountPoints:
       - SourceVolume: opentelemetry-auto-instrumentation
         ContainerPath: "/otel-auto-instrumentation"
-        ReadOnly: false
 
 - op: add
   path: /Resources/TaskDefinition/Properties/ContainerDefinitions/2
