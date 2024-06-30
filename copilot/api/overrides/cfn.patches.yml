@@ -41,6 +41,16 @@
 - op: add
   path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/Environment
   value:
+    - Name: COPILOT_APPLICATION_NAME
+      Value: !Sub '${AppName}'
+    - Name: COPILOT_SERVICE_DISCOVERY_ENDPOINT
+      Value: dev.service-catalogue.local
+    - Name: COPILOT_ENVIRONMENT_NAME
+      Value: !Sub '${EnvName}'
+    - Name: COPILOT_SERVICE_NAME
+      Value: !Sub '${WorkloadName}'
+    - Name: COPILOT_LB_DNS
+      Value: !GetAtt EnvControllerAction.PublicLoadBalancerDNSName
     - Name: "OTEL_RESOURCE_ATTRIBUTES"
       Value: "aws.hostedin.environment=dev,service.name=service-catalogue"
     - Name: "OTEL_LOGS_EXPORTER"
