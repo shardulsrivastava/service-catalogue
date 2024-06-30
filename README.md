@@ -34,6 +34,8 @@ Execute the patch:
 copilot svc deploy
 ```
 
+optionally add `--force` to force deployment with the newly created image.
+
 ## Override ECS Task Definition
 
 

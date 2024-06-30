@@ -41,22 +41,32 @@
 - op: add
   path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/Environment
   value:
-    - Name: OTEL_RESOURCE_ATTRIBUTES
-      Value: aws.hostedin.environment=dev,service.name=service-catalogue
-    - Name: OTEL_AWS_APP_SIGNALS_ENABLED
-      value: 'true'
-    - Name: OTEL_METRICS_EXPORTER
-      Value: none
-    - Name: JAVA_TOOL_OPTIONS
+    - Name: "OTEL_RESOURCE_ATTRIBUTES"
+      Value: "aws.hostedin.environment=dev,service.name=service-catalogue"
+    - Name: "OTEL_LOGS_EXPORTER"
+      Value: "none"
+    - Name: "OTEL_METRICS_EXPORTER"
+      Value: "none"
+    - Name: "OTEL_EXPORTER_OTLP_PROTOCOL"
+      value: "http/protobuf"
+    - Name: "OTEL_AWS_APP_SIGNALS_ENABLED"
+      value: "true"
+    - Name: "JAVA_TOOL_OPTIONS"
       Value: " -javaagent:/otel-auto-instrumentation/javaagent.jar"
-    - Name: OTEL_AWS_APP_SIGNALS_EXPORTER_ENDPOINT
-      Value: http://127.0.0.1:4315
-    - Name: OTEL_TRACES_SAMPLER
-      Value: xray
-    - Name: OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      Value: http://127.0.0.1:4315
-    - Name: OTEL_PROPAGATORS
-      Value: tracecontext,baggage,b3,xray
+    - Name: "OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT"
+      Value: "http://localhost:4316/v1/metrics"
+    - Name: "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT"
+      Value: "http://localhost:4316/v1/traces"
+    - Name: "OTEL_TRACES_SAMPLER"
+      Value: "xray"
+    - Name: "OTEL_PROPAGATORS"
+      Value: "tracecontext,baggage,b3,xray"
+
+- op: add
+  path: /Resources/TaskDefinition/Properties/ContainerDefinitions/0/MountPoints
+  value:
+    - SourceVolume: "opentelemetry-auto-instrumentation"
+      ContainerPath: "/otel-auto-instrumentation"
 
 - op: add
   path: /Resources/TaskDefinition/Properties/ContainerDefinitions/1
