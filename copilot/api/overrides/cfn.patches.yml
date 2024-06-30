@@ -71,6 +71,13 @@
     MountPoints:
       - SourceVolume: opentelemetry-auto-instrumentation
         ContainerPath: "/otel-auto-instrumentation"
+    LogConfiguration:
+      LogDriver: awslogs
+      Options:
+        awslogs-create-group: 'true'
+        awslogs-group: "/ecs/ecs-init"
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
 
 - op: add
   path: /Resources/TaskDefinition/Properties/ContainerDefinitions/2
@@ -81,5 +88,12 @@
     Secrets:
       - Name: CW_CONFIG_CONTENT
         ValueFrom: ecs-cwagent
-    
+    LogConfiguration:
+      LogDriver: awslogs
+      Options:
+        awslogs-create-group: 'true'
+        awslogs-group: "/ecs/ecs-cwagent"
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: ecs
+
 
