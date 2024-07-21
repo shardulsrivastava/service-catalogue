@@ -1,20 +1,24 @@
 # Service Catalogue
 
 
-
 ## CodeSpace
 
 This repo has codespace setup and upon initialization, all the right dependencies including AWS CLI, Copilot CLI will be installed and application JAR will be generated.
 
 ## Deploy with CoPilot
 
-```
+```bash
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=
 export AWS_DEFAULT_REGION=us-east-1
 ./auto/deploy
 ```
 
+check the logs:
+
+```bash
+copilot svc logs --previous
+```
 
 ## Override IAM Task and Execution Role
 
@@ -35,9 +39,3 @@ copilot svc deploy
 ```
 
 optionally add `--force` to force deployment with the newly created image.
-
-## Override ECS Task Definition
-
-
-
-
